@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>로그인 중…</title>
+<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#15191F;color:#E6E7EA;font:15px system-ui,sans-serif}</style>
+</head>
+<body>
+<p id="m">로그인 중…</p>
+<script>
+// 구글 로그인 중계 페이지 (look360 360 작업실).
+// 구글은 미리 등록한 고정 주소로만 돌려보내 준다. 작업실 주소(임시 터널)는 바뀌므로, 이 고정 페이지가 받아서
+// state 안의 «돌아갈 주소» 로 그대로 넘긴다. 아무것도 저장하지 않고, 허용된 주소 형태로만 넘긴다.
+// code 만으로는 아무것도 못 한다 — 교환에 필요한 PKCE 검증값과 secret 은 작업실 서버에만 있다.
+(function () {
+  var q = new URLSearchParams(location.search), st = q.get("state") || "", o = "";
+  try {
+    var p = st.split(".")[0].replace(/-/g, "+").replace(/_/g, "/");
+    o = JSON.parse(atob(p + "===".slice((p.length + 3) % 4))).o || "";
+  } catch (e) {}
+  var ok = /^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(o)
+        || /^https:\/\/kabkee-main\.tailfe017f\.ts\.net(:\d+)?$/.test(o)
+        || /^http:\/\/(100\.64\.25\.50|localhost|127\.0\.0\.1)(:\d+)?$/.test(o);
+  if (!ok) { document.getElementById("m").textContent = "허용되지 않은 주소야. 작업실에서 다시 로그인해줘."; return; }
+  var keep = new URLSearchParams();
+  ["code", "state", "error"].forEach(function (k) { if (q.get(k)) keep.set(k, q.get(k)); });
+  location.replace(o + "/auth/callback?" + keep.toString());
+})();
+</script>
+</body>
+</html>
