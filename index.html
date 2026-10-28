@@ -21,6 +21,7 @@
     o = JSON.parse(atob(p + "===".slice((p.length + 3) % 4))).o || "";
   } catch (e) {}
   var ok = /^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(o)
+        || o === "https://studio.look360.kr"
         || /^https:\/\/kabkee-main\.tailfe017f\.ts\.net(:\d+)?$/.test(o)
         || /^http:\/\/(100\.64\.25\.50|localhost|127\.0\.0\.1)(:\d+)?$/.test(o);
   if (!ok) { document.getElementById("m").textContent = "허용되지 않은 주소야. 작업실에서 다시 로그인해줘."; return; }
